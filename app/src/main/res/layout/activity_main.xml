@@ -6,152 +6,98 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
-    <androidx.gridlayout.widget.GridLayout
-        android:id="@+id/gridLayout"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/dodgem_board"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:layout_column="0"
-            app:layout_row="0"
-            app:srcCompat="@drawable/black_chess_piece" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:layout_column="1"
-            app:layout_row="0"
-            app:srcCompat="@drawable/square_none" />
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:layout_column="2"
-            app:layout_row="0"
-            app:srcCompat="@drawable/square_none" />
-
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:layout_column="0"
-            app:layout_row="1"
-            app:srcCompat="@drawable/black_chess_piece" />
-
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:layout_column="1"
-            app:layout_row="1"
-            app:srcCompat="@drawable/square_none" />
-
-        <ImageView
-            android:id="@+id/imageView6"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:layout_column="2"
-            app:layout_row="1"
-            app:srcCompat="@drawable/square_none" />
-
-        <ImageView
-            android:id="@+id/imageView7"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:layout_column="0"
-            app:layout_row="2"
-            app:srcCompat="@drawable/square_none" />
-
-        <ImageView
-            android:id="@+id/imageView8"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:layout_column="1"
-            app:layout_row="2"
-            app:srcCompat="@drawable/white_chess_piece" />
-
-        <ImageView
-            android:id="@+id/imageView9"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:layout_column="2"
-            app:layout_row="2"
-            app:srcCompat="@drawable/white_chess_piece" />
-
-    </androidx.gridlayout.widget.GridLayout>
-
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="0dp"
+        android:id="@+id/textViewColor"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:text="Dodgem"
-        android:textAlignment="center"
-        android:textColor="@android:color/holo_red_dark"
-        android:textSize="40dp"
+        android:layout_marginTop="100dp"
+        android:text="Bạn chọn quân Đen"
+        android:textColor="@color/black"
+        android:textSize="30dp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewWhite"
+        app:layout_constraintStart_toStartOf="@+id/imageViewBlack"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageViewBlack"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/square"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewWhite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewColor"
+        app:srcCompat="@drawable/chess_piece_black" />
+
+    <ImageView
+        android:id="@+id/imageViewWhite"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="24dp"
+        android:background="@drawable/square_none"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewBlack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageViewBlack"
+        app:layout_constraintTop_toTopOf="@+id/imageViewBlack"
+        app:srcCompat="@drawable/chess_piece_white" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinnerDepth"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/btn_backgroup"
+        android:dropDownWidth="160dp"
+        android:spinnerMode="dialog"
+        app:layout_constraintEnd_toEndOf="@+id/buttonPlayGame"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/buttonPlayGame"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPlayGame" />
+
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonOut"
-        android:layout_width="240dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="32dp"
-        android:background="@color/teal_700"
-        android:text="Out"
+        android:id="@+id/buttonPlayGame"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="400dp"
+        android:background="@drawable/btn_backgroup"
+        android:text="Đấu với Máy"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="24dp"
-        android:textStyle="bold|italic"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gridLayout" />
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewWhite"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="@+id/imageViewBlack" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonUndo"
-        android:layout_width="wrap_content"
+        android:id="@+id/buttonPlayGame2"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:background="@color/teal_200"
-        android:text="Undo"
+        android:background="@drawable/btn_backgroup"
+        android:text="Đấu với Bạn"
         android:textAllCaps="false"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="20dp"
-        android:textStyle="bold|italic"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="@+id/buttonOut"
-        app:layout_constraintTop_toBottomOf="@+id/buttonOut" />
+        app:layout_constraintEnd_toEndOf="@+id/imageViewWhite"
+        app:layout_constraintStart_toStartOf="@+id/imageViewBlack"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerDepth" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonNew"
-        android:layout_width="wrap_content"
+        android:id="@+id/buttonLuatChoi"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:background="@color/teal_200"
-        android:text="New"
+        android:background="@drawable/btn_backgroup"
+        android:text="Luật chơi"
         android:textAllCaps="false"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="20dp"
-        android:textStyle="bold|italic"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/buttonOut"
-        app:layout_constraintTop_toBottomOf="@+id/buttonOut" />
+        app:layout_constraintEnd_toEndOf="@+id/buttonPlayGame"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/buttonPlayGame"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPlayGame2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

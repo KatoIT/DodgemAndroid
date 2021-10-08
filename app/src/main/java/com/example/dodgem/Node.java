@@ -1,5 +1,6 @@
 package com.example.dodgem;
 
+
 import java.util.ArrayList;
 
 public class Node {
@@ -9,27 +10,28 @@ public class Node {
     private boolean whiteRun;
 
     /*
-     * Hàm constructor sẽ tự tạo ra các con cho đến độ sâu yêu cầu
+     * Hàm constructor
      */
-    public Node(int[] board, int depth, boolean whiteRun) {
+    public Node(int[] board, int depth, boolean whiteRun, int depth_max) {
         super();
         this.board = board;
         this.depth = depth;
         this.whiteRun = whiteRun;
-        //Auto create child node
         this.nextNodes = new ArrayList<>();
-        if (this.depth <= Constraint.DEPTH_MAX) {  // kiểm tra độ sâu phù hợp và khác trạng thái cuối
+        if (depth <= depth_max) {
             for (int selected = 0; selected < 9; selected++) {
-                if (this.whiteRun) { // lượt quân trắng
-                    if (this.board[selected] == Constraint.WHITE) { // Quân Trắng
+                if (this.board[selected] == 0) continue; // Nếu là ô trống thì bỏ qua.
+                if (this.whiteRun) {
+                    if (this.getBoard()[selected] == Constraint.WHITE) { // Quân Trắng
                         for (int run : Constraint.WHITE_RUN) {
                             if (this.checkMove(selected, run)) {  // Kiểm tra nước có thể di chuyển
                                 int[] varBoard = this.board.clone();
-                                if (selected > 2) { // Quân trắng không ở hàng trên cùng
+                                if (!(selected < 3 && run == -3)) { // Quân trắng không ở hàng trên cùng và đi lên
                                     varBoard[selected + run] = varBoard[selected];
                                 }
                                 varBoard[selected] = 0;
-                                nextNodes.add(new Node(varBoard, this.depth + 1, !whiteRun));
+                                Node nextNode = new Node(varBoard, this.depth + 1, !this.whiteRun, depth_max);
+                                this.nextNodes.add(nextNode);
                             }
                         }
                     }
@@ -38,26 +40,28 @@ public class Node {
                         for (int run : Constraint.BLACK_RUN) {
                             if (this.checkMove(selected, run)) {  // Kiểm tra nước có thể di chuyển
                                 int[] varBoard = this.board.clone();
-                                if (selected % 3 != 2) { // Quân Đen không ở hàng ngoài cùng bên Phải
+                                if (!(selected % 3 == 2 && run == 1)) { // Quân Đen không ở hàng ngoài cùng bên Phải và đi sang Phải
                                     varBoard[selected + run] = varBoard[selected];
                                 }
                                 varBoard[selected] = 0;
-                                nextNodes.add(new Node(varBoard, this.depth + 1, !whiteRun));
+                                Node nextNode = new Node(varBoard, this.depth + 1, !this.whiteRun, depth_max);
+                                this.nextNodes.add(nextNode);
                             }
                         }
                     }
                 }
             }
         }
-    }
 
+
+    }
 
     public ArrayList<Node> getNextNodes() {
         return nextNodes;
     }
 
-    public void setNextNodes(ArrayList<Node> nextNodes) {
-        this.nextNodes = nextNodes;
+    public void setNextNodes(Node nextNodes) {
+        this.nextNodes.add(nextNodes);
     }
 
     public int[] getBoard() {
@@ -85,6 +89,26 @@ public class Node {
     }
 
     /*
+     * Nếu trên trên bàn chỉ còn 1 màu cờ hoặc đến lượt đi nhưng không còn nước đi => END
+     */
+    public boolean isNodeEnd() {
+        return this.nextNodes.size() == 0;
+    }
+
+    public boolean is_node_end_2() {
+        boolean blackEmpty = true;
+        boolean whiteEmpty = true;
+        for (int i : this.board) {
+            if (i == Constraint.BLACK) {
+                blackEmpty = false;
+            } else if (i == Constraint.WHITE) {
+                whiteEmpty = false;
+            }
+        }
+        return blackEmpty || whiteEmpty;
+    }
+
+    /*
      * Vị trí quân cờ ứng với môi giá trị trong Constraint.VALUE_OF_WHITE và Constraint.VALUE_OF_BLACK
      * Quân Trắng: (2 - số quân Trắng còn trên bàn cờ) * 85
      * Quân Đen: (2 - số quân Đen còn trên bàn cờ) * (-85)
@@ -98,6 +122,7 @@ public class Node {
         int numberWhite = 2;
         for (int i = 0; i < 9; i++) {
             if (this.board[i] == Constraint.BLACK) {  // Quân Đen
+//                Log.i("black",  " " );
                 numberBlack--;
                 eval += Constraint.VALUE_OF_BLACK[i];
                 if (i < 6) {
@@ -116,43 +141,24 @@ public class Node {
                         if (this.board[i - 1] == Constraint.BLACK) {
                             eval += 40;
                         }
-                        if (i % 3 != 1 && this.board[i - 2] == Constraint.BLACK) {
+                        if (i % 3 == 2 && this.board[i - 2] == Constraint.BLACK) {
                             eval += 30;
                         }
                     }
                 }
             }
         }
-        eval += numberBlack * (-85) + numberWhite * 85;
-        if (this.isNodeEnd()) {
+        eval += (numberWhite - numberBlack) * 85;
+        if (this.isNodeEnd() && !is_node_end_2()) {
             if (this.whiteRun) {
-                eval -= 100;
+                eval -= 85;
             } else {
-                eval += 100;
+                eval += 85;
             }
         }
         return eval;
     }
 
-    /*
-     * Nếu trên trên bàn chỉ còn 1 màu cờ hoặc đến lượt đi nhưng không còn nước đi => END
-     */
-    public boolean isNodeEnd() {
-        boolean blackEmpty = true;
-        boolean whiteEmpty = true;
-        for (int i : this.board) {
-            if (i == Constraint.BLACK) {
-                blackEmpty = false;
-            } else if (i == Constraint.WHITE) {
-                whiteEmpty = false;
-            }
-        }
-        if (blackEmpty || whiteEmpty || this.nextNodes.size() == 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     /*
      * kiểm tra nước đi đó có đi được không
@@ -162,16 +168,10 @@ public class Node {
             return false;
         }
         if (selected % 3 == 2 && move_ == 1) {
-            if (board[selected] == Constraint.BLACK) {
-                return true;
-            }
-            return false;
+            return board[selected] == Constraint.BLACK;
         }
         if (selected < 3 && move_ == -3) {
-            if (board[selected] == Constraint.WHITE) {
-                return true;
-            }
-            return false;
+            return board[selected] == Constraint.WHITE;
         }
         if (selected > 5 && move_ == 3) {
             return false;
