@@ -46,7 +46,7 @@ public class Minimax {
                 }
             }
         }
-//        Log.e("Hello ", chooseNode.getBoard()[0] + ", "+chooseNode.getBoard()[1] + ", "+chooseNode.getBoard()[2] + ", "+chooseNode.getBoard()[3] + ", "+chooseNode.getBoard()[4] + ", "+chooseNode.getBoard()[5] + ", "+chooseNode.getBoard()[6] + ", "+chooseNode.getBoard()[7] + ", "+chooseNode.getBoard()[8]);
+//        chooseNode.getNode();
         return chooseNode;
     }
 }

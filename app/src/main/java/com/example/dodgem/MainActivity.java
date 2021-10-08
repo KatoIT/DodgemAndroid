@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         mapping();
         // Set
         ArrayList<String> arrayList = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i < 10; i++) {
             arrayList.add("Độ khó " + i);
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.item_spinner, arrayList);

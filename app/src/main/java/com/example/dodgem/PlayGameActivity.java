@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -76,11 +77,15 @@ public class PlayGameActivity extends AppCompatActivity {
             buttonOut.setVisibility(View.INVISIBLE);
             Node node = new Node(board.clone(), depth, isWhiteOfPlayer != 1, depth);
             if (node.isNodeEnd()) {
-                showEnd();
+//                Log.e("Info", "End in Move!");
+                showEnd("You");
             } else {
                 if (!isPlayerRun && playBot) {
+//                    Log.e("Info", "Machine run!");
                     MachineMove();
                 } else {
+                    boardUndo.add(boardUndoNext);
+                    boardUndoNext = board.clone();
                     isWhiteOfPlayer = -1 * isWhiteOfPlayer;
                 }
             }
@@ -185,11 +190,14 @@ public class PlayGameActivity extends AppCompatActivity {
             this.Draw();  // Vẽ lại bàn cờ
             Node node = new Node(board.clone(), depth, isWhiteOfPlayer != 1, depth);
             if (node.isNodeEnd()) {
-                showEnd();
+//                Log.e("Info", "End in Move!");
+                showEnd("You");
             } else {
                 if (playBot) {
+//                    Log.e("Info", "Machine run!");
                     MachineMove();
                 } else {
+                    boardUndoNext = board.clone();
                     isWhiteOfPlayer = -1 * isWhiteOfPlayer;
                 }
             }
@@ -236,7 +244,7 @@ public class PlayGameActivity extends AppCompatActivity {
             }
             return false;
         }
-        if (selected > 5 && move_ == 3) {
+        if(selected > 5 && move_ == 3) {
             return false;
         }
         return true;
@@ -257,16 +265,19 @@ public class PlayGameActivity extends AppCompatActivity {
         } else {
             this.Draw();
         }
-//        node = new Node(board.clone(), depth, isWhiteOfPlayer != 1);
+        node = new Node(board.clone(), depth, isWhiteOfPlayer == 1, depth);
         if (node.isNodeEnd()) {
-            showEnd();
+            showEnd("Bot");
+//            Log.e("Info", "End in MachineMove!");
+        }else {
+//            Log.e("Info", "Player run!");
         }
     }
 
-    public void showEnd() {
+    public void showEnd(String isPlayerWin) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // set Message là phương thức thiết lập câu thông báo
-        builder.setMessage("End game!")
+        builder.setMessage(isPlayerWin + " Win")
                 // positiveButton là nút thuận : đặt là OK
                 .setPositiveButton("Ván mới", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

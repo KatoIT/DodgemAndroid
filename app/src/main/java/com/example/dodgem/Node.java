@@ -1,6 +1,8 @@
 package com.example.dodgem;
 
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class Node {
@@ -18,20 +20,19 @@ public class Node {
         this.depth = depth;
         this.whiteRun = whiteRun;
         this.nextNodes = new ArrayList<>();
-        if (depth <= depth_max) {
+        if (depth <= depth_max && !this.is_node_end_2()) {
             for (int selected = 0; selected < 9; selected++) {
                 if (this.board[selected] == 0) continue; // Nếu là ô trống thì bỏ qua.
                 if (this.whiteRun) {
-                    if (this.getBoard()[selected] == Constraint.WHITE) { // Quân Trắng
+                    if (this.board[selected] == Constraint.WHITE) { // Quân Trắng
                         for (int run : Constraint.WHITE_RUN) {
                             if (this.checkMove(selected, run)) {  // Kiểm tra nước có thể di chuyển
                                 int[] varBoard = this.board.clone();
-                                if (!(selected < 3 && run == -3)) { // Quân trắng không ở hàng trên cùng và đi lên
+                                if (selected + run >= 0) { // Quân trắng không ở hàng trên cùng và đi lên
                                     varBoard[selected + run] = varBoard[selected];
                                 }
                                 varBoard[selected] = 0;
-                                Node nextNode = new Node(varBoard, this.depth + 1, !this.whiteRun, depth_max);
-                                this.nextNodes.add(nextNode);
+                                this.nextNodes.add(new Node(varBoard, this.depth + 1, !this.whiteRun, depth_max));
                             }
                         }
                     }
@@ -44,48 +45,50 @@ public class Node {
                                     varBoard[selected + run] = varBoard[selected];
                                 }
                                 varBoard[selected] = 0;
-                                Node nextNode = new Node(varBoard, this.depth + 1, !this.whiteRun, depth_max);
-                                this.nextNodes.add(nextNode);
+                                this.nextNodes.add(new Node(varBoard, this.depth + 1, !this.whiteRun, depth_max));
                             }
                         }
                     }
                 }
             }
         }
+    }
 
+    public void getNode(){
+        String txt = "";
+        for (int i : this.board
+             ) {
+            txt += i + ", ";
+        }
+        txt += "Depth: " + this.depth + ", " + this.whiteRun;
+        Log.e("Node", txt);
+    }
 
+    /*
+     * kiểm tra nước đi đó có đi được không
+     */
+    public Boolean checkMove(int selected, int move_) {
+        if (selected % 3 == 0 && move_ == -1) {
+            return false;
+        }
+        if (selected % 3 == 2 && move_ == 1) {
+            return board[selected] == Constraint.BLACK;
+        }
+        if (selected < 3 && move_ == -3) {
+            return board[selected] == Constraint.WHITE;
+        }
+        if (selected > 5 && move_ == 3) {
+            return false;
+        }
+        return board[selected + move_] == 0;
     }
 
     public ArrayList<Node> getNextNodes() {
         return nextNodes;
     }
 
-    public void setNextNodes(Node nextNodes) {
-        this.nextNodes.add(nextNodes);
-    }
-
     public int[] getBoard() {
         return board;
-    }
-
-    public void setBoard(int[] board) {
-        this.board = board;
-    }
-
-    public int getDepth() {
-        return depth;
-    }
-
-    public void setDepth(int depth) {
-        this.depth = depth;
-    }
-
-    public boolean isWhiteRun() {
-        return whiteRun;
-    }
-
-    public void setWhiteRun(boolean whiteRun) {
-        this.whiteRun = whiteRun;
     }
 
     /*
@@ -122,7 +125,6 @@ public class Node {
         int numberWhite = 2;
         for (int i = 0; i < 9; i++) {
             if (this.board[i] == Constraint.BLACK) {  // Quân Đen
-//                Log.i("black",  " " );
                 numberBlack--;
                 eval += Constraint.VALUE_OF_BLACK[i];
                 if (i < 6) {
@@ -159,24 +161,5 @@ public class Node {
         return eval;
     }
 
-
-    /*
-     * kiểm tra nước đi đó có đi được không
-     */
-    public Boolean checkMove(int selected, int move_) {
-        if (selected % 3 == 0 && move_ == -1) {
-            return false;
-        }
-        if (selected % 3 == 2 && move_ == 1) {
-            return board[selected] == Constraint.BLACK;
-        }
-        if (selected < 3 && move_ == -3) {
-            return board[selected] == Constraint.WHITE;
-        }
-        if (selected > 5 && move_ == 3) {
-            return false;
-        }
-        return board[selected + move_] == 0;
-    }
 
 }
